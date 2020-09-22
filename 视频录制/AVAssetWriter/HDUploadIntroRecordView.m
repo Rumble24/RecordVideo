@@ -13,6 +13,8 @@
 
 /// 目前实现了第三种
 
+/// 参考：https://github.com/suifengqjn
+
 #import "HDUploadIntroRecordView.h"
 #import <Photos/Photos.h>
 #import "HDUploadRecordEncoder.h"
