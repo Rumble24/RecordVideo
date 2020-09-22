@@ -7,38 +7,61 @@
 //  调研那么久。发现 只有一个实现了改变视频大小：https://github.com/gaoyuexit/WeChatSightDemo
 //  https://github.com/XiaoDongXie1024/Crop-sample-buffer  这个人说他也实现了。但是我发现写入本地[_videoInput appendSampleBuffer:sampleBuffer];报错
 
+/// https://www.juejin.im/post/6844904121619726343#heading-14
+                                    
+/// 实现视频大小的改变。我猜测有3种    1.上面的那个裁剪图片     2.直接操作流     3.录制完成之后进行视频区域的裁剪
+
+/// 目前实现了第三种
+
 #import "HDUploadIntroRecordView.h"
 #import <Photos/Photos.h>
 #import "HDUploadRecordEncoder.h"
+#define kScreenWidth [UIScreen mainScreen].bounds.size.width
+#define kScreenHeight [UIScreen mainScreen].bounds.size.height
 
 @interface HDUploadIntroRecordView ()<AVCaptureVideoDataOutputSampleBufferDelegate,AVCaptureAudioDataOutputSampleBufferDelegate>
+
 @property (nonatomic, strong) HDUploadRecordEncoder *recordEncoder;
+/// 捕获到的视频呈现的layer
+@property (nonatomic, strong) AVCaptureVideoPreviewLayer *previewLayer;
+/// 捕获视频的会话
+@property (nonatomic, strong) AVCaptureSession *recordSession;
 
-@property (nonatomic, strong) AVCaptureVideoPreviewLayer *previewLayer;//捕获到的视频呈现的layer
-@property (nonatomic, strong) AVCaptureSession *recordSession;//捕获视频的会话
+/// 输入设备
+@property (nonatomic, strong) AVCaptureDevice *videoDevice;
+/// 后置摄像头输入
+@property (nonatomic, strong) AVCaptureDeviceInput *videoInput;
+/// 视频录制连接
+@property (nonatomic, strong) AVCaptureConnection *videoConnection;
+/// 视频输出
+@property (nonatomic, strong) AVCaptureVideoDataOutput *videoOutput;
 
-@property (nonatomic, strong) AVCaptureDevice *videoDevice; //输入设备
-@property (nonatomic, strong) AVCaptureDeviceInput *videoInput;//后置摄像头输入
-@property (nonatomic, strong) AVCaptureConnection *videoConnection;//视频录制连接
-@property (nonatomic, strong) AVCaptureVideoDataOutput *videoOutput;//视频输出
+/// 麦克风输入
+@property (nonatomic, strong) AVCaptureDeviceInput *audioMicInput;
+/// 音频录制连接
+@property (nonatomic, strong) AVCaptureConnection *audioConnection;
+/// 音频输出
+@property (nonatomic, strong) AVCaptureAudioDataOutput *audioOutput;
 
-@property (nonatomic, strong) AVCaptureDeviceInput *audioMicInput;//麦克风输入
-@property (nonatomic, strong) AVCaptureConnection *audioConnection;//音频录制连接
-@property (nonatomic, strong) AVCaptureAudioDataOutput *audioOutput;//音频输出
+/// 开始录制的时间
+@property (nonatomic, assign) CMTime startTime;
+/// 正在录制
+@property (nonatomic, assign) BOOL isCapturing;
+/// 当前录制时间
+@property (nonatomic, assign) CGFloat currentRecordTime;
 
-@property (nonatomic, assign) CMTime startTime;//开始录制的时间
-@property (nonatomic, assign) BOOL isCapturing;//正在录制
-@property (nonatomic, assign) CGFloat currentRecordTime;//当前录制时间
-
-
-@property (nonatomic, assign) AVCaptureDevicePosition position; //设置焦点
-@property (nonatomic, copy) NSString *videoPath;//视频路径
-
+/// 设置焦点
+@property (nonatomic, assign) AVCaptureDevicePosition position;
+/// 视频录制路径
+@property (nonatomic,   copy) NSString *videoPath;
+/// 生成的视频大小
+@property (nonatomic, assign) CGSize outputSize;
 @end
 
 @implementation HDUploadIntroRecordView
 
 - (void)dealloc {
+    NSLog(@"%s",__func__);
     [_recordSession stopRunning];
     _recordSession = nil;
     _previewLayer = nil;
@@ -54,9 +77,8 @@
     self = [super initWithFrame:frame];
     
     self.maxRecordTime = 10;
-    
     self.layer.masksToBounds = YES;
-    
+    [self setAspectRatio:HD_VIDEO_RATIO_1_1];
     [self.layer insertSublayer:self.previewLayer atIndex:0];
     
     return self;
@@ -67,23 +89,50 @@
     self.previewLayer.frame = self.bounds;
 }
 
+#pragma 设置百分比
+- (void)setAspectRatio:(HDVideoAspectRatio)videoRatio {
+    switch (videoRatio) {
+        case HD_VIDEO_RATIO_3_4:
+            _outputSize = CGSizeMake(kScreenWidth, kScreenWidth*3/4);
+            break;
+        case HD_VIDEO_RATIO_9_16:
+            _outputSize = CGSizeMake(kScreenWidth, kScreenWidth*9/16);
+            break;
+        case HD_VIDEO_RATIO_1_1:
+            _outputSize = CGSizeMake(kScreenWidth, kScreenWidth);
+            break;
+        case HD_VIDEO_RATIO_16_9:
+            _outputSize = CGSizeMake(kScreenWidth, kScreenWidth*16/9);
+            break;
+        case HD_VIDEO_RATIO_4_3:
+            _outputSize = CGSizeMake(kScreenWidth, kScreenWidth*4/3);
+            break;
+        default:
+            break;
+    }
+}
+
 
 #pragma mark - 公开的方法
 /// 开始运行
 - (void)startRunning {
     self.startTime = CMTimeMake(0, 0);
     self.isCapturing = NO;
-    [self.recordSession startRunning];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        [self.recordSession startRunning];
+    });
 }
+
 
 /// 停止运行
 - (void)stopRunning {
     _startTime = CMTimeMake(0, 0);
-    if (_recordSession) {
-        [_recordSession stopRunning];
-    }
-    [_recordEncoder finishWithCompletionHandler:^{
-    }];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+        if (self.recordSession) {
+            [self.recordSession stopRunning];
+        }
+    });
+    [_recordEncoder finishWithCompletionHandler:^{}];
 }
 
 /// 开始录制
@@ -106,19 +155,19 @@
                     [self.delegate uploadIntroRecordViewFailWithReason:@"录制失败"];
                 }
             } else {
-                if (self.delegate && [self.delegate respondsToSelector:@selector(uploadIntroRecordViewDidFinishRecordingToOutputFile:imageCover:)]) {
-                    [self.delegate uploadIntroRecordViewDidFinishRecordingToOutputFile:asset imageCover:movieImage];
+                if (self.delegate && [self.delegate respondsToSelector:@selector(uploadIntroRecordViewDidFinishRecordingToAsset:imageCover:)]) {
+                    [self.delegate uploadIntroRecordViewDidFinishRecordingToAsset:asset imageCover:movieImage];
                 }
             }
         });
     }];
 }
 
+
 /// 停止录制
 - (void)stopCaptureHandler:(void (^)(AVURLAsset *asset,UIImage *movieImage))handler {
     @synchronized(self) {
         if (self.isCapturing) {
-            NSString *path = self.recordEncoder.path;
             self.isCapturing = NO;
             dispatch_queue_t audioQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0);
             dispatch_async(audioQueue, ^{
@@ -132,12 +181,6 @@
                             [self.delegate uploadIntroRecordViewProgress:self.currentRecordTime / self.maxRecordTime];
                         });
                     }
-                    //NSURL *url = [NSURL fileURLWithPath:path];
-                    //[[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
-                    //    [PHAssetChangeRequest creationRequestForAssetFromVideoAtFileURL:url];
-                    //} completionHandler:^(BOOL success, NSError * _Nullable error) {
-                    //    NSLog(@"保存成功");
-                    //}];
                     [self movieToImageHandler:handler];
                 }];
             });
@@ -145,35 +188,40 @@
     }
 }
 
+// 保存到相册
+- (void)saveToPhotoLibraryCompletionHandler:(nullable void(^)(BOOL success, NSError *__nullable error))completionHandler {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSString *path = self.recordEncoder.path;
+        [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
+            [PHAssetChangeRequest creationRequestForAssetFromVideoAtFileURL:[NSURL fileURLWithPath:path]];
+        } completionHandler:^(BOOL success, NSError * _Nullable error) {
+            if (completionHandler) {
+                completionHandler(success,error);
+            }
+        }];
+    });
+}
+
 /**
  获取视频第一帧的图片
  */
 - (void)movieToImageHandler:(void (^)(AVURLAsset *asset,UIImage *movieImage))handler {
+    
+    
+    // 获取视频第一帧
     NSURL *url = [NSURL fileURLWithPath:self.videoPath];
-    AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:url options:nil];
-    AVAssetImageGenerator *generator = [[AVAssetImageGenerator alloc] initWithAsset:asset];
-    generator.appliesPreferredTrackTransform = TRUE;
-    CMTime thumbTime = CMTimeMakeWithSeconds(0, 60);
-    generator.apertureMode = AVAssetImageGeneratorApertureModeEncodedPixels;
-    AVAssetImageGeneratorCompletionHandler generatorHandler =
-    ^(CMTime requestedTime, CGImageRef im, CMTime actualTime, AVAssetImageGeneratorResult result, NSError *error){
-        if (result == AVAssetImageGeneratorSucceeded) {
-            UIImage *thumbImg = [UIImage imageWithCGImage:im];
-            if (handler) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    handler(asset,thumbImg);
-                });
-            }
-        } else {
-            if (handler) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    handler(nil,nil);
-                });
-            }
-        }
-    };
-    [generator generateCGImagesAsynchronouslyForTimes:
-     [NSArray arrayWithObject:[NSValue valueWithCMTime:thumbTime]] completionHandler:generatorHandler];
+    NSDictionary *opts = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:NO] forKey:AVURLAssetPreferPreciseDurationAndTimingKey];
+    AVURLAsset *urlAsset = [AVURLAsset URLAssetWithURL:url options:opts];
+    AVAssetImageGenerator *generator = [AVAssetImageGenerator assetImageGeneratorWithAsset:urlAsset];
+    generator.appliesPreferredTrackTransform = YES;
+    NSError *error = nil;
+    CGImageRef img = [generator copyCGImageAtTime:CMTimeMake(0, 10) actualTime:NULL error:&error];
+    
+    if (handler) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            handler(urlAsset,[UIImage imageWithCGImage:img]);
+        });
+    }
 }
 
 #pragma mark - 切换前后摄像头
@@ -218,6 +266,8 @@
     return videoCache;
 }
 
+
+
 - (NSString *)getUploadFileType:(NSString *)type fileType:(NSString *)fileType {
     NSTimeInterval now = [[NSDate date] timeIntervalSince1970];
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
@@ -229,6 +279,8 @@
     return fileName;
 }
 
+
+
 #pragma mark - 写入数据 AVCaptureVideoDataOutputSampleBufferDelegate & AVCaptureAudioDataOutputSampleBufferDelegate
 - (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection {
     
@@ -236,10 +288,7 @@
         return;
     }
     
-    
     BOOL isVideo = YES;
-    
-    
     
     //限制在一个线程执行
     @synchronized(self) {
@@ -259,18 +308,16 @@
             
             if (channels == 0) channels = 2;
             if (samplerate == 0) samplerate = 44100;
-            
+
             NSString *videoName = [self getUploadFileType:@"video" fileType:@"mp4"];
             self.videoPath = [[self getVideoCachePath] stringByAppendingPathComponent:videoName];
             /// 这里只是数据写入的大小 不是改变原来视频的大小
             self.recordEncoder = [HDUploadRecordEncoder encoderForPath:self.videoPath
-                                                                height:640
-                                                                 width:480
+                                                                height:self.outputSize.height
+                                                                 width:self.outputSize.width
                                                               channels:channels
                                                                samples:samplerate];
         }
-        
-        
     }
     CMTime dur = CMSampleBufferGetPresentationTimeStamp(sampleBuffer);
     if (self.startTime.value == 0) {
@@ -290,11 +337,8 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             [self stopCapture];
             self.isCapturing = NO;
-            NSLog(@"dispatch_get_main_queue 2 ");
         });
         
-        NSLog(@"dispatch_get_main_queue 1 ");
-
         return;
     }
     if (self.delegate && [self.delegate respondsToSelector:@selector(uploadIntroRecordViewProgress:)]) {
@@ -302,18 +346,16 @@
             [self.delegate uploadIntroRecordViewProgress:self.currentRecordTime / self.maxRecordTime];
         });
     }
-    
-    
-    // 进行数据编码  1280x720
-    if (isVideo) {        
-        [self.recordEncoder encodeFrame:sampleBuffer isVideo:isVideo];
-    } else {
-        [self.recordEncoder encodeFrame:sampleBuffer isVideo:isVideo];
-    }
+    [self.recordEncoder encodeFrame:sampleBuffer isVideo:isVideo];
 }
 
 
-#pragma mark - setter & getter
+
+
+
+
+
+#pragma mark - 懒加载
 /// 捕获到的视频呈现的layer
 - (AVCaptureVideoPreviewLayer *)previewLayer {
     if (!_previewLayer) {
@@ -331,7 +373,12 @@
     if (!_recordSession) {
         _recordSession = [[AVCaptureSession alloc] init];
         
-        _recordSession.sessionPreset = AVCaptureSessionPreset640x480;
+        
+        if (self.sessionPreset) {
+            _recordSession.sessionPreset = self.sessionPreset;
+        } else {
+            _recordSession.sessionPreset = AVCaptureSessionPresetMedium;
+        }
 
         
         //使用AVCaptureDeviceInput来让设备添加到session中, AVCaptureDeviceInput负责管理设备端口
@@ -399,6 +446,8 @@
          */
         NSDictionary *setcapSettings = [NSDictionary dictionaryWithObjectsAndKeys:
                                        [NSNumber numberWithInt:kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange], kCVPixelBufferPixelFormatTypeKey,
+                                        
+                                        
                                         nil];
         _videoOutput.videoSettings = setcapSettings;
         

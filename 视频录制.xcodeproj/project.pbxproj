@@ -1,0 +1,382 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		64CFBBB025184D640026136D /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 64CFBBAF25184D640026136D /* AppDelegate.m */; };
+		64CFBBB625184D640026136D /* HDImagePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 64CFBBB525184D640026136D /* HDImagePicker.m */; };
+		64CFBBBB25184D660026136D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 64CFBBBA25184D660026136D /* Assets.xcassets */; };
+		64CFBBBE25184D660026136D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 64CFBBBC25184D660026136D /* LaunchScreen.storyboard */; };
+		64CFBBC125184D660026136D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 64CFBBC025184D660026136D /* main.m */; };
+		64CFBBCB2518ACF20026136D /* AVCaptureMovieFileOutputController.m in Sources */ = {isa = PBXBuildFile; fileRef = 64CFBBCA2518ACF20026136D /* AVCaptureMovieFileOutputController.m */; };
+		64CFBBCE2518AD330026136D /* AVAssetWriterController.m in Sources */ = {isa = PBXBuildFile; fileRef = 64CFBBCD2518AD330026136D /* AVAssetWriterController.m */; };
+		64CFBBD12518AE620026136D /* MovieFileOutputView.m in Sources */ = {isa = PBXBuildFile; fileRef = 64CFBBD02518AE620026136D /* MovieFileOutputView.m */; };
+		64CFBBD62518C09A0026136D /* HDUploadIntroRecordView.m in Sources */ = {isa = PBXBuildFile; fileRef = 64CFBBD42518C09A0026136D /* HDUploadIntroRecordView.m */; };
+		64CFBBD72518C09A0026136D /* HDUploadRecordEncoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 64CFBBD52518C09A0026136D /* HDUploadRecordEncoder.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		64CFBBAB25184D640026136D /* 视频录制.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "视频录制.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		64CFBBAE25184D640026136D /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		64CFBBAF25184D640026136D /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		64CFBBB425184D640026136D /* HDImagePicker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HDImagePicker.h; sourceTree = "<group>"; };
+		64CFBBB525184D640026136D /* HDImagePicker.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HDImagePicker.m; sourceTree = "<group>"; };
+		64CFBBBA25184D660026136D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		64CFBBBD25184D660026136D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		64CFBBBF25184D660026136D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		64CFBBC025184D660026136D /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		64CFBBC82518A4AD0026136D /* 视频录制.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "视频录制.entitlements"; sourceTree = "<group>"; };
+		64CFBBC92518ACF20026136D /* AVCaptureMovieFileOutputController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AVCaptureMovieFileOutputController.h; sourceTree = "<group>"; };
+		64CFBBCA2518ACF20026136D /* AVCaptureMovieFileOutputController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AVCaptureMovieFileOutputController.m; sourceTree = "<group>"; };
+		64CFBBCC2518AD330026136D /* AVAssetWriterController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AVAssetWriterController.h; sourceTree = "<group>"; };
+		64CFBBCD2518AD330026136D /* AVAssetWriterController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AVAssetWriterController.m; sourceTree = "<group>"; };
+		64CFBBCF2518AE620026136D /* MovieFileOutputView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MovieFileOutputView.h; sourceTree = "<group>"; };
+		64CFBBD02518AE620026136D /* MovieFileOutputView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MovieFileOutputView.m; sourceTree = "<group>"; };
+		64CFBBD22518C0990026136D /* HDUploadRecordEncoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDUploadRecordEncoder.h; sourceTree = "<group>"; };
+		64CFBBD32518C09A0026136D /* HDUploadIntroRecordView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDUploadIntroRecordView.h; sourceTree = "<group>"; };
+		64CFBBD42518C09A0026136D /* HDUploadIntroRecordView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDUploadIntroRecordView.m; sourceTree = "<group>"; };
+		64CFBBD52518C09A0026136D /* HDUploadRecordEncoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDUploadRecordEncoder.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		64CFBBA825184D640026136D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		64CFBBA225184D640026136D = {
+			isa = PBXGroup;
+			children = (
+				64CFBBAD25184D640026136D /* 视频录制 */,
+				64CFBBAC25184D640026136D /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		64CFBBAC25184D640026136D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				64CFBBAB25184D640026136D /* 视频录制.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		64CFBBAD25184D640026136D /* 视频录制 */ = {
+			isa = PBXGroup;
+			children = (
+				64CFBBC82518A4AD0026136D /* 视频录制.entitlements */,
+				64CFBBAE25184D640026136D /* AppDelegate.h */,
+				64CFBBAF25184D640026136D /* AppDelegate.m */,
+				64CFBBB425184D640026136D /* HDImagePicker.h */,
+				64CFBBB525184D640026136D /* HDImagePicker.m */,
+				64CFBBD82519E4850026136D /* MovieFileOutput */,
+				64CFBBD92519E4970026136D /* AVAssetWriter */,
+				64CFBBBA25184D660026136D /* Assets.xcassets */,
+				64CFBBBC25184D660026136D /* LaunchScreen.storyboard */,
+				64CFBBBF25184D660026136D /* Info.plist */,
+				64CFBBC025184D660026136D /* main.m */,
+			);
+			path = "视频录制";
+			sourceTree = "<group>";
+		};
+		64CFBBD82519E4850026136D /* MovieFileOutput */ = {
+			isa = PBXGroup;
+			children = (
+				64CFBBC92518ACF20026136D /* AVCaptureMovieFileOutputController.h */,
+				64CFBBCA2518ACF20026136D /* AVCaptureMovieFileOutputController.m */,
+				64CFBBCF2518AE620026136D /* MovieFileOutputView.h */,
+				64CFBBD02518AE620026136D /* MovieFileOutputView.m */,
+			);
+			path = MovieFileOutput;
+			sourceTree = "<group>";
+		};
+		64CFBBD92519E4970026136D /* AVAssetWriter */ = {
+			isa = PBXGroup;
+			children = (
+				64CFBBCC2518AD330026136D /* AVAssetWriterController.h */,
+				64CFBBCD2518AD330026136D /* AVAssetWriterController.m */,
+				64CFBBD32518C09A0026136D /* HDUploadIntroRecordView.h */,
+				64CFBBD42518C09A0026136D /* HDUploadIntroRecordView.m */,
+				64CFBBD22518C0990026136D /* HDUploadRecordEncoder.h */,
+				64CFBBD52518C09A0026136D /* HDUploadRecordEncoder.m */,
+			);
+			path = AVAssetWriter;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		64CFBBAA25184D640026136D /* 视频录制 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 64CFBBC425184D660026136D /* Build configuration list for PBXNativeTarget "视频录制" */;
+			buildPhases = (
+				64CFBBA725184D640026136D /* Sources */,
+				64CFBBA825184D640026136D /* Frameworks */,
+				64CFBBA925184D640026136D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "视频录制";
+			productName = "视频录制";
+			productReference = 64CFBBAB25184D640026136D /* 视频录制.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		64CFBBA325184D640026136D /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1130;
+				ORGANIZATIONNAME = "王景伟";
+				TargetAttributes = {
+					64CFBBAA25184D640026136D = {
+						CreatedOnToolsVersion = 11.3.1;
+					};
+				};
+			};
+			buildConfigurationList = 64CFBBA625184D640026136D /* Build configuration list for PBXProject "视频录制" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 64CFBBA225184D640026136D;
+			productRefGroup = 64CFBBAC25184D640026136D /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				64CFBBAA25184D640026136D /* 视频录制 */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		64CFBBA925184D640026136D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				64CFBBBE25184D660026136D /* LaunchScreen.storyboard in Resources */,
+				64CFBBBB25184D660026136D /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		64CFBBA725184D640026136D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				64CFBBB625184D640026136D /* HDImagePicker.m in Sources */,
+				64CFBBB025184D640026136D /* AppDelegate.m in Sources */,
+				64CFBBD72518C09A0026136D /* HDUploadRecordEncoder.m in Sources */,
+				64CFBBD12518AE620026136D /* MovieFileOutputView.m in Sources */,
+				64CFBBD62518C09A0026136D /* HDUploadIntroRecordView.m in Sources */,
+				64CFBBCE2518AD330026136D /* AVAssetWriterController.m in Sources */,
+				64CFBBC125184D660026136D /* main.m in Sources */,
+				64CFBBCB2518ACF20026136D /* AVCaptureMovieFileOutputController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		64CFBBBC25184D660026136D /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				64CFBBBD25184D660026136D /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		64CFBBC225184D660026136D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		64CFBBC325184D660026136D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		64CFBBC525184D660026136D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "视频录制/视频录制.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = RADML45TTY;
+				INFOPLIST_FILE = "视频录制/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = cn.hundun.hundunyanxishe;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = develop_pp;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		64CFBBC625184D660026136D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "视频录制/视频录制.entitlements";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = RADML45TTY;
+				INFOPLIST_FILE = "视频录制/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = cn.hundun.hundunyanxishe;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = develop_pp;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		64CFBBA625184D640026136D /* Build configuration list for PBXProject "视频录制" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				64CFBBC225184D660026136D /* Debug */,
+				64CFBBC325184D660026136D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		64CFBBC425184D660026136D /* Build configuration list for PBXNativeTarget "视频录制" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				64CFBBC525184D660026136D /* Debug */,
+				64CFBBC625184D660026136D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 64CFBBA325184D640026136D /* Project object */;
+}

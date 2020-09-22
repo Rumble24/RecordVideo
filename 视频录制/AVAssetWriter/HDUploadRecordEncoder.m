@@ -9,12 +9,16 @@
 #import "HDUploadRecordEncoder.h"
 
 @interface HDUploadRecordEncoder ()
+///<    媒体写入对象
+@property (nonatomic, strong) AVAssetWriter *writer;
+///<    视频写入
+@property (nonatomic, strong) AVAssetWriterInput *videoInput;
+///<    音频写入
+@property (nonatomic, strong) AVAssetWriterInput *audioInput;
+///<    写入路径
+@property (nonatomic, strong) NSString *path;
 
-@property (nonatomic, strong) AVAssetWriter *writer;//媒体写入对象
-@property (nonatomic, strong) AVAssetWriterInput *videoInput;//视频写入
-@property (nonatomic, strong) AVAssetWriterInput *audioInput;//音频写入
-@property (nonatomic, strong) NSString *path;//写入路径
-
+@property (nonatomic, strong) NSDictionary *videoCompressionSettings;
 @end
 
 
@@ -75,14 +79,26 @@
  初始化视频输入
  */
 - (void)initVideoInputHeight:(NSInteger)height width:(NSInteger)width {
-    //录制视频的一些配置,分辨率,编码方式等等
-    NSDictionary *settings = [NSDictionary dictionaryWithObjectsAndKeys:
-                              AVVideoCodecH264, AVVideoCodecKey,
-                              [NSNumber numberWithInteger:width], AVVideoWidthKey,
-                              [NSNumber numberWithInteger:height], AVVideoHeightKey,
-                              nil];
+    //写入视频大小
+    NSInteger numPixels = height * width;
+    //每像素比特
+    CGFloat bitsPerPixel = 6.0;
+    NSInteger bitsPerSecond = numPixels * bitsPerPixel;
+    
+    // 码率和帧率设置
+    NSDictionary *compressionProperties = @{ AVVideoAverageBitRateKey : @(bitsPerSecond),
+                                             AVVideoExpectedSourceFrameRateKey : @(30),
+                                             AVVideoMaxKeyFrameIntervalKey : @(30),
+                                             AVVideoProfileLevelKey : AVVideoProfileLevelH264BaselineAutoLevel };
+    
+    //视频属性
+    self.videoCompressionSettings = @{ AVVideoCodecKey : AVVideoCodecTypeH264,
+                                       AVVideoScalingModeKey : AVVideoScalingModeResizeAspectFill,
+                                       AVVideoWidthKey : @(height),
+                                       AVVideoHeightKey : @(width),
+                                       AVVideoCompressionPropertiesKey : compressionProperties };
     //初始化视频写入类
-    _videoInput = [AVAssetWriterInput assetWriterInputWithMediaType:AVMediaTypeVideo outputSettings:settings];
+    _videoInput = [AVAssetWriterInput assetWriterInputWithMediaType:AVMediaTypeVideo outputSettings:self.videoCompressionSettings];
     //实时采集数据源
     _videoInput.expectsMediaDataInRealTime = YES;
     //将视频输入源加入
