@@ -11,79 +11,85 @@
 #import <AVFoundation/AVFoundation.h>
 #import <MediaPlayer/MediaPlayer.h>
 
+#define kScreenWidth [UIScreen mainScreen].bounds.size.width
+#define kScreenHeight [UIScreen mainScreen].bounds.size.height
+
 @interface BeautyController ()<GPUImageVideoCameraDelegate>
 
-// 创建摄像头
-@property (strong, nonatomic) GPUImageVideoCamera *camera;
-@property (strong, nonatomic) GPUImageView *previewLayer;
-// 创建几个滤镜
-/**
- 摩皮
- */
-@property (strong, nonatomic) GPUImageBilateralFilter *bilaterFilter;
-/**
- 曝光
- */
-@property (strong, nonatomic) GPUImageExposureFilter *exposureFilter;
-/**
- 美白
- */
-@property (strong, nonatomic) GPUImageBrightnessFilter *brigtnessFilter;
-/**
- 饱和
- */
-@property (strong, nonatomic) GPUImageSaturationFilter *saturationFilter;
-/**
- 创建写入的文件
- */
-@property (strong, nonatomic) GPUImageMovieWriter *movieWriter;
+///< 创建摄像头
+@property (nonatomic, strong) GPUImageVideoCamera *camera;
+///< 创建展示的view
+@property (nonatomic, strong) GPUImageView *previewLayer;
 
-// 底部的view
-@property (nonatomic, strong)  UIView *bottomView;
-@property (strong, nonatomic) MPMoviePlayerController *moviePlayer;
-@property (copy, nonatomic) NSString *moviePath;
+///< 创建几个滤镜
 
+///< 摩皮
+@property (nonatomic, strong) GPUImageBilateralFilter *bilaterFilter;
+///< 曝光
+@property (nonatomic, strong) GPUImageExposureFilter *exposureFilter;
+///< 美白
+@property (nonatomic, strong) GPUImageBrightnessFilter *brigtnessFilter;
+///< 饱和
+@property (nonatomic, strong) GPUImageSaturationFilter *saturationFilter;
+///< 创建写入的文件
+@property (nonatomic, strong) GPUImageMovieWriter *movieWriter;
 
+@property (nonatomic, strong) AVPlayer *player;
+@property (nonatomic,   copy) NSString *moviePath;
+
+///< 开始/结束
 @property (nonatomic, strong) UIButton *startButton;
+///< 播放
 @property (nonatomic, strong) UIButton *playBtn;
+///< 切换摄像头
+@property (nonatomic, strong) UIButton *switchCameraBtn;
+///< 开关
+@property (nonatomic, strong) UISwitch *beautyBtn;
+///< 磨皮
+@property (nonatomic, strong) UISlider *mopiSlider;
+///< 曝光
+@property (nonatomic, strong) UISlider *baoguangSlider;
+///< 美白
+@property (nonatomic, strong) UISlider *meibaiSlider;
+///< 饱和
+@property (nonatomic, strong) UISlider *baoheSlider;
 
 @end
 @implementation BeautyController
-- (GPUImageVideoCamera *)camera {
-    if (!_camera) {
-        _camera = [[GPUImageVideoCamera alloc] initWithSessionPreset:AVCaptureSessionPresetHigh cameraPosition:AVCaptureDevicePositionFront];
-    }
-    return _camera;
-}
-- (GPUImageView *)previewLayer {
-    if (!_previewLayer) {
-        _previewLayer = [[GPUImageView alloc] initWithFrame:self.view.bounds];
-    }
-    return _previewLayer;
-}
-- (GPUImageMovieWriter *)movieWriter {
-    if (!_movieWriter) {
-        _movieWriter = [[GPUImageMovieWriter alloc] initWithMovieURL:[self obtainUrl] size:[UIScreen mainScreen].bounds.size];
-    }
-    return _movieWriter;
-}
-- (UIView *)bottomView {
-    if (!_bottomView) {
-        _bottomView = [[UIView alloc]initWithFrame:CGRectMake(0, CGRectGetHeight(self.view.bounds) - 100, CGRectGetWidth(self.view.bounds), 100)];
-    }
-    return _bottomView;
-}
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.view.backgroundColor = [UIColor whiteColor];
+    [self createViews];
     
+    [self createCamera];
+}
+
+- (void)createViews {
+    self.view.backgroundColor = [UIColor whiteColor];
+    [self.view addSubview:self.playBtn];
+    [self.view addSubview:self.startButton];
+    [self.view addSubview:self.switchCameraBtn];
+    [self.view addSubview:self.beautyBtn];
+    [self.view addSubview:self.mopiSlider];
+    [self.view addSubview:self.baoguangSlider];
+    [self.view addSubview:self.meibaiSlider];
+    [self.view addSubview:self.baoheSlider];
+}
+
+- (void)createCamera {
     //初始化一些滤镜
     self.bilaterFilter = [[GPUImageBilateralFilter alloc] init];
     self.exposureFilter = [[GPUImageExposureFilter alloc] init];
     self.brigtnessFilter = [[GPUImageBrightnessFilter alloc] init];
     self.saturationFilter = [[GPUImageSaturationFilter alloc] init];
+    
+    self.mopiSlider.value = self.bilaterFilter.distanceNormalizationFactor / 10.f;
+    self.baoguangSlider.value = self.exposureFilter.exposure;
+    self.meibaiSlider.value = self.brigtnessFilter.brightness + 0.5;
+    self.baoheSlider.value = self.saturationFilter.saturation;
+    
     // 调整摄像头的方向
     self.camera.outputImageOrientation = UIInterfaceOrientationPortrait;
     // 调整摄像头的镜像 自己动的方向和镜子中的方向一致
@@ -93,6 +99,7 @@
     [self.camera addTarget:filterGroup];
     // 将imageview 添加到过滤层上
     [filterGroup addTarget:self.previewLayer];
+    
     [self.view insertSubview:self.previewLayer atIndex:0];
     // 开始拍摄
     [self.camera startCameraCapture];
@@ -103,21 +110,6 @@
     self.camera.audioEncodingTarget = self.movieWriter;
     // 开始录制
     [self.movieWriter startRecording];
-    
-    
-    self.startButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [self.startButton setTitle:@"结束" forState:0];
-    self.startButton.frame = CGRectMake(50, 50, 100, 50);
-    [self.view addSubview:self.startButton];
-    [self.startButton addTarget:self action:@selector(endLiveAction:) forControlEvents:UIControlEventTouchUpInside];
-    
-    
-    self.playBtn = [UIButton buttonWithType:UIButtonTypeSystem];
-    [self.playBtn setTitle:@"播放" forState:0];
-    self.playBtn.frame = CGRectMake(200, 50, 100, 50);
-    [self.playBtn setTitleColor:[UIColor redColor] forState:0];
-    [self.view addSubview:self.playBtn];
-    [self.playBtn addTarget:self action:@selector(startPlayAction:) forControlEvents:UIControlEventTouchUpInside];
 }
 /**
  获取缓存的路径
@@ -138,7 +130,7 @@
 /**
  创建过滤组
  */
-- (GPUImageFilterGroup *)obtainFilterGroup{
+- (GPUImageFilterGroup *)obtainFilterGroup {
     
     GPUImageFilterGroup *group = [[GPUImageFilterGroup alloc] init];
     // 按照顺序组成一个链
@@ -151,119 +143,198 @@
     
     return group;
 }
+
+
+
 #pragma mark - 相关按钮的点击事件
 
-/**
- 结束直播相关的事件
-
- @param sender 按钮
- */
+/** 结束直播相关的事件 */
 - (void)endLiveAction:(UIButton *)sender {
-   
     [self.camera stopCameraCapture];
     [self.previewLayer removeFromSuperview];
     [self.movieWriter finishRecording];
 }
-/**
- 开始播放视频
-
- @param sender 按钮
- */
+/** 开始播放视频 */
 - (void)startPlayAction:(UIButton *)sender {
+    self.player = [AVPlayer playerWithURL:[NSURL fileURLWithPath:self.moviePath]];
+    AVPlayerLayer *playerLayer = [AVPlayerLayer playerLayerWithPlayer:self.player];
+    playerLayer.backgroundColor = [UIColor whiteColor].CGColor;
+    playerLayer.videoGravity = AVLayerVideoGravityResizeAspect;
+    playerLayer.frame = CGRectMake(0, 0, kScreenWidth, kScreenWidth);
+    [self.view.layer addSublayer:playerLayer];
+    [self.player play];
     
-    MPMoviePlayerController *moviePlayer = [[MPMoviePlayerController alloc] initWithContentURL:[NSURL fileURLWithPath:self.moviePath]];
-    moviePlayer.view.frame = self.view.bounds;
-    moviePlayer.fullscreen = YES;
-    [self.view addSubview:moviePlayer.view];
-    [moviePlayer play];
-    self.moviePlayer = moviePlayer;
-}
-
-/**
- 点击弹出需要设备的美颜参数
-
- @param sender 按钮
- */
-- (IBAction)beautufulViewAction:(UIButton *)sender {
-
-    [UIView animateWithDuration:0.25 animations:^{
-        [self.view layoutIfNeeded];
-    }];
-}
-
-/**
- 切换前后摄像头
-
- @param sender 按钮
- */
-- (IBAction)switchFontAndBehindCameraAction:(UIButton *)sender {
     
+    //获取视频尺寸
+    AVURLAsset *asset = [AVURLAsset assetWithURL:[NSURL fileURLWithPath:self.moviePath]];
+    NSArray *array = asset.tracks;
+    CGSize videoSize = CGSizeZero;
+    
+    for (AVAssetTrack *track in array) {
+        if ([track.mediaType isEqualToString:AVMediaTypeVideo]) {
+            videoSize = track.naturalSize;
+        }
+    }
+    NSLog(@"startPlayAction : %@",NSStringFromCGSize(videoSize));
+}
+/** 切换前后摄像头 */
+- (void)switchFontAndBehindCameraAction:(UIButton *)sender {
     [self.camera rotateCamera];
-    
 }
 
-/**
- 开启或者关闭美颜
-
- @param sender 按钮
- */
-- (IBAction)closeOrOpenBeautifulAction:(UISwitch *)sender {
+/** 开启或者关闭美颜 */
+- (void)closeOrOpenBeautifulAction:(UISwitch *)sender {
     if (sender.isOn) {
         [self.camera removeAllTargets];
         GPUImageFilterGroup *group = [self obtainFilterGroup];
         [self.camera addTarget:group];
         [group addTarget:self.previewLayer];
         
-    }else{
+    } else {
         [self.camera removeAllTargets];
         [self.camera addTarget:self.previewLayer];
     }
 }
-/**
- 磨皮的slider的事件
 
- @param sender 按钮
- */
-- (IBAction)mopiSliderAction:(UISlider *)sender {
-    
-    self.bilaterFilter.distanceNormalizationFactor = sender.value * 0.3;
-    
+/** 磨皮的slider的事件 */
+- (void)mopiSliderAction:(UISlider *)sender {
+    self.bilaterFilter.distanceNormalizationFactor = sender.value * 10;
 }
-/**
- 曝光的按钮的点击事件
-
- @param sender 按钮
- */
-- (IBAction)baoguangSliderAction:(UISlider *)sender {
-    
+/** 曝光的按钮的点击事件 */
+- (void)baoguangSliderAction:(UISlider *)sender {
     self.exposureFilter.exposure = sender.value;
-    
 }
-
-/**
- 美白的按钮的点击事件
-
- @param sender 按钮
- */
-- (IBAction)meibaiSliderAction:(UISlider *)sender {
-    
-    self.brigtnessFilter.brightness = sender.value;
+/** 美白的按钮的点击事件 */
+- (void)meibaiSliderAction:(UISlider *)sender {
+    self.brigtnessFilter.brightness = (sender.value - 0.5) / 10.f;
 }
-
-/**
- 饱和的按钮的点击事件
-
- @param sender 按钮
- */
-- (IBAction)baoheSliderAction:(UISlider *)sender {
-    
+/** 饱和的按钮的点击事件 */
+- (void)baoheSliderAction:(UISlider *)sender {
     self.saturationFilter.saturation = sender.value;
-    
 }
-#pragma mark - camera 的 delegate
 
+
+#pragma mark - camera 的 delegate
 - (void)willOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer {
     
     
+}
+
+
+
+#pragma mark - 懒加载
+- (GPUImageVideoCamera *)camera {
+    if (!_camera) {
+        _camera = [[GPUImageVideoCamera alloc] initWithSessionPreset:AVCaptureSessionPresetMedium cameraPosition:AVCaptureDevicePositionBack];
+    }
+    return _camera;
+}
+- (GPUImageView *)previewLayer {
+    if (!_previewLayer) {
+        _previewLayer = [[GPUImageView alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth, kScreenWidth)];
+        _previewLayer.fillMode = kGPUImageFillModeStretch;
+    }
+    return _previewLayer;
+}
+- (GPUImageMovieWriter *)movieWriter {
+    if (!_movieWriter) {
+        _movieWriter = [[GPUImageMovieWriter alloc] initWithMovieURL:[self obtainUrl] size:CGSizeMake(kScreenWidth, kScreenWidth)];
+    }
+    return _movieWriter;
+}
+
+////// -- 按钮
+
+///< 开始/结束
+- (UIButton *)startButton {
+    if (!_startButton) {
+        _startButton = [UIButton buttonWithType:UIButtonTypeSystem];
+        [_startButton setTitle:@"结束" forState:0];
+        _startButton.frame = CGRectMake(0, kScreenWidth + 20, kScreenWidth/4.0, 50);
+        [_startButton addTarget:self action:@selector(endLiveAction:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _startButton;
+}
+///< 播放
+- (UIButton *)playBtn {
+    if (!_playBtn) {
+        _playBtn = [UIButton buttonWithType:UIButtonTypeSystem];
+        [_playBtn setTitle:@"播放" forState:0];
+        _playBtn.frame = CGRectMake(kScreenWidth/4.0, kScreenWidth + 20, kScreenWidth/4.0, 50);
+        [_playBtn setTitleColor:[UIColor redColor] forState:0];
+        [_playBtn addTarget:self action:@selector(startPlayAction:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _playBtn;
+}
+///< 切换摄像头
+- (UIButton *)switchCameraBtn {
+    if (!_switchCameraBtn) {
+        _switchCameraBtn = [UIButton buttonWithType:UIButtonTypeSystem];
+        [_switchCameraBtn setTitle:@"切换摄像头" forState:0];
+        _switchCameraBtn.frame = CGRectMake(kScreenWidth/4.0 * 2, kScreenWidth + 20, kScreenWidth/4.0, 50);
+        [_switchCameraBtn addTarget:self action:@selector(switchFontAndBehindCameraAction:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _switchCameraBtn;
+}
+///< 开关
+- (UISwitch *)beautyBtn {
+    if (!_beautyBtn) {
+        _beautyBtn = [[UISwitch alloc]initWithFrame:CGRectMake(kScreenWidth/4.0 * 3, kScreenWidth + 20, kScreenWidth/4.0, 50)];
+        _beautyBtn.on = YES;
+        [_beautyBtn addTarget:self action:@selector(closeOrOpenBeautifulAction:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _beautyBtn;
+}
+///< 磨皮
+- (UISlider *)mopiSlider {
+    if (!_mopiSlider) {
+        UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(0, kScreenWidth + 100, 80, 50)];
+        label.textColor = [UIColor blueColor];
+        label.text = @"磨皮";
+        label.textAlignment = NSTextAlignmentCenter;
+        [self.view addSubview:label];
+        _mopiSlider = [[UISlider alloc]initWithFrame:CGRectMake(90, kScreenWidth + 100, kScreenWidth - 100, 50)];
+        [_mopiSlider addTarget:self action:@selector(mopiSliderAction:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _mopiSlider;
+}
+///< 曝光
+- (UISlider *)baoguangSlider {
+    if (!_baoguangSlider) {
+        UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(0, kScreenWidth + 150, 80, 50)];
+        label.textColor = [UIColor blueColor];
+        label.text = @"曝光";
+        label.textAlignment = NSTextAlignmentCenter;
+        [self.view addSubview:label];
+        _baoguangSlider = [[UISlider alloc]initWithFrame:CGRectMake(90, kScreenWidth + 150, kScreenWidth - 100, 50)];
+        [_baoguangSlider addTarget:self action:@selector(baoguangSliderAction:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _baoguangSlider;
+}
+///< 美白
+- (UISlider *)meibaiSlider {
+    if (!_meibaiSlider) {
+        UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(0, kScreenWidth + 200, 80, 50)];
+        label.textColor = [UIColor blueColor];
+        label.text = @"美白";
+        label.textAlignment = NSTextAlignmentCenter;
+        [self.view addSubview:label];
+        _meibaiSlider = [[UISlider alloc]initWithFrame:CGRectMake(90, kScreenWidth + 200, kScreenWidth - 100, 50)];
+        [_meibaiSlider addTarget:self action:@selector(meibaiSliderAction:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _meibaiSlider;
+}
+///< 饱和
+- (UISlider *)baoheSlider {
+    if (!_baoheSlider) {
+        UILabel *label = [[UILabel alloc]initWithFrame:CGRectMake(0, kScreenWidth + 250, 80, 50)];
+        label.textColor = [UIColor blueColor];
+        label.text = @"饱和";
+        label.textAlignment = NSTextAlignmentCenter;
+        [self.view addSubview:label];
+        _baoheSlider = [[UISlider alloc]initWithFrame:CGRectMake(90, kScreenWidth + 250, kScreenWidth - 100, 50)];
+        [_baoheSlider addTarget:self action:@selector(baoheSliderAction:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _baoheSlider;
 }
 @end

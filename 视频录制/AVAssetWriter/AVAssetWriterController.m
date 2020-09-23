@@ -38,7 +38,7 @@
     self.view.backgroundColor = [UIColor whiteColor];
 
     self.recordView = [[HDUploadIntroRecordView alloc]initWithFrame:CGRectMake(100, 100, 200, 200)];
-    [self.recordView setAspectRatio:HD_VIDEO_RATIO_9_16];
+    [self.recordView setAspectRatio:HD_VIDEO_RATIO_1_1];
     self.recordView.delegate = self;
     [self.view addSubview:self.recordView];
     

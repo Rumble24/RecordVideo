@@ -237,17 +237,20 @@
         }
     }
     
-    AVCaptureDevice *device = [AVCaptureDevice defaultDeviceWithDeviceType:AVCaptureDeviceTypeBuiltInWideAngleCamera mediaType:AVMediaTypeVideo position:self.position];
-    if (device) {
-        self.videoDevice = device;
-        AVCaptureDeviceInput *input = [AVCaptureDeviceInput deviceInputWithDevice:self.videoDevice error:nil];
-        [self.recordSession beginConfiguration];
-        [self.recordSession removeInput:self.videoInput];
-        if ([self.recordSession canAddInput:input]) {
-            [self.recordSession addInput:input];
-            self.videoInput = input;
-            [self.recordSession commitConfiguration];
+    if (@available(iOS 10.0, *)) {
+        AVCaptureDevice *device = [AVCaptureDevice defaultDeviceWithDeviceType:AVCaptureDeviceTypeBuiltInWideAngleCamera mediaType:AVMediaTypeVideo position:self.position];
+        if (device) {
+            self.videoDevice = device;
+            AVCaptureDeviceInput *input = [AVCaptureDeviceInput deviceInputWithDevice:self.videoDevice error:nil];
+            [self.recordSession beginConfiguration];
+            [self.recordSession removeInput:self.videoInput];
+            if ([self.recordSession canAddInput:input]) {
+                [self.recordSession addInput:input];
+                self.videoInput = input;
+                [self.recordSession commitConfiguration];
+            }
         }
+    } else {
     }
 }
 
