@@ -84,9 +84,10 @@ UIImagePickerControllerDelegate
         case 2:
             [self presentViewController:AVAssetWriterController.new animated:YES completion:nil];
             break;
-        case 3:
-            [self presentViewController:BeautyController.new animated:YES completion:nil];
-            break;
+        case 3: {
+            BeautyController *beauty = [[BeautyController alloc]initWithAspectRatio:HD_VIDEO_RATIO_3_4];
+            [self presentViewController:beauty animated:YES completion:nil];
+        } break;
         default:
             break;
     }

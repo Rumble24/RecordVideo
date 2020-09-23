@@ -1,2 +1,3 @@
 ${PODS_ROOT}/Target Support Files/Pods-视频录制/Pods-视频录制-frameworks.sh
 ${BUILT_PRODUCTS_DIR}/GPUImage/GPUImage.framework
+${BUILT_PRODUCTS_DIR}/GPUImageBeautifyFilter/GPUImageBeautifyFilter.framework

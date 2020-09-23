@@ -11,7 +11,7 @@
 #import <AssetsLibrary/AssetsLibrary.h>
 
 /**
- * CameraRecord 录制视频比例类型定义
+ * CameraRecord 录制视频比例类型定义  高 宽比
  */
 typedef NS_ENUM(NSInteger, HDVideoAspectRatio) {
     /// 3:4
@@ -23,7 +23,9 @@ typedef NS_ENUM(NSInteger, HDVideoAspectRatio) {
     /// 16:9
     HD_VIDEO_RATIO_16_9,
     /// 4:3
-    HD_VIDEO_RATIO_4_3
+    HD_VIDEO_RATIO_4_3,
+    /// 全屏
+    HD_VIDEO_RATIO_FULL,
 };
 
 NS_ASSUME_NONNULL_BEGIN

@@ -7,10 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "HDUploadIntroRecordView.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
 @interface BeautyController : UIViewController
+
+- (instancetype)initWithAspectRatio:(HDVideoAspectRatio)ratio;
 
 @end
 

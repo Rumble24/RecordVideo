@@ -56,6 +56,9 @@
 @property (nonatomic,   copy) NSString *videoPath;
 /// 生成的视频大小
 @property (nonatomic, assign) CGSize outputSize;
+
+@property (nonatomic, strong) UIImageView *imageView;
+
 @end
 
 @implementation HDUploadIntroRecordView
@@ -80,6 +83,9 @@
     self.layer.masksToBounds = YES;
     [self setAspectRatio:HD_VIDEO_RATIO_1_1];
     [self.layer insertSublayer:self.previewLayer atIndex:0];
+    
+    self.imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 100, 100)];
+    [self addSubview:self.imageView];
     
     return self;
 }
@@ -106,6 +112,9 @@
             break;
         case HD_VIDEO_RATIO_4_3:
             _outputSize = CGSizeMake(kScreenWidth, kScreenWidth*4/3);
+            break;
+        case HD_VIDEO_RATIO_FULL:
+            _outputSize = CGSizeMake(kScreenWidth, kScreenHeight);
             break;
         default:
             break;
@@ -282,7 +291,12 @@
     return fileName;
 }
 
-
+/*
+  在这里我们可以处理很多视频
+ 这一步要做的事情是：在 CVPixelBufferRef 上添加滤镜效果，并输出处理后的 CVPixelBufferRef 。
+OpenGL ES、CIImage、Metal、GPUImage 等。
+ 
+ */
 
 #pragma mark - 写入数据 AVCaptureVideoDataOutputSampleBufferDelegate & AVCaptureAudioDataOutputSampleBufferDelegate
 - (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection {
@@ -350,6 +364,26 @@
         });
     }
     [self.recordEncoder encodeFrame:sampleBuffer isVideo:isVideo];
+    
+    
+    //// l滤镜处理
+    // 获取图片帧数据
+    CVImageBufferRef imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
+    CIImage *ciImage = [CIImage imageWithCVImageBuffer:imageBuffer];
+
+
+    // 滤镜处理
+    CIFilter *filter = [CIFilter filterWithName:@"CIComicEffect"];
+    [filter setValue:ciImage forKey:@"inputImage"];
+    ciImage = filter.outputImage;
+
+    // UIImage
+    UIImage *image = [UIImage imageWithCIImage:ciImage];
+
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.imageView.image = image;
+    });
+    
 }
 
 

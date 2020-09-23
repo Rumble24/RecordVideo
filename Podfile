@@ -5,5 +5,6 @@ target '视频录制' do
 
   use_frameworks!
   pod 'GPUImage'
+  pod 'GPUImageBeautifyFilter'
 
 end

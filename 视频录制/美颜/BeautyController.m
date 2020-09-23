@@ -10,6 +10,7 @@
 #import <GPUImage/GPUImage.h>
 #import <AVFoundation/AVFoundation.h>
 #import <MediaPlayer/MediaPlayer.h>
+#import "GPUImageCropFilter.h"
 
 #define kScreenWidth [UIScreen mainScreen].bounds.size.width
 #define kScreenHeight [UIScreen mainScreen].bounds.size.height
@@ -21,7 +22,10 @@
 ///< 创建展示的view
 @property (nonatomic, strong) GPUImageView *previewLayer;
 
-///< 创建几个滤镜
+
+///< 创建几个滤镜。我们可以基于 GPUImageFilter 写自己的滤镜
+///< 大量现成的内置滤镜（4大类） 1). 颜色类（亮度、色度、饱和度、对比度、曲线、白平衡...） 2). 图像类（仿射变换、裁剪、高斯模糊、毛玻璃效果...） 3). 颜色混合类（差异混合、alpha混合、遮罩混合...） 4). 效果类（像素化、素描效果、压花效果、球形玻璃效果...）
+
 
 ///< 摩皮
 @property (nonatomic, strong) GPUImageBilateralFilter *bilaterFilter;
@@ -31,6 +35,8 @@
 @property (nonatomic, strong) GPUImageBrightnessFilter *brigtnessFilter;
 ///< 饱和
 @property (nonatomic, strong) GPUImageSaturationFilter *saturationFilter;
+///< 裁剪
+@property (nonatomic, strong) GPUImageCropFilter *cropFilter;
 ///< 创建写入的文件
 @property (nonatomic, strong) GPUImageMovieWriter *movieWriter;
 
@@ -54,16 +60,28 @@
 ///< 饱和
 @property (nonatomic, strong) UISlider *baoheSlider;
 
+@property (nonatomic, assign) CGSize writerSize;
+
+@property (nonatomic, assign) CGRect cropRegion;
+
+/// 默认 1 ： 1
+@property (nonatomic, assign) HDVideoAspectRatio ratio;
 @end
 @implementation BeautyController
 
+- (instancetype)initWithAspectRatio:(HDVideoAspectRatio)ratio {
+    if (self = [super init]) {
+        self.ratio = ratio;
+    }
+    return self;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
     [self createViews];
     
-    [self createCamera];
+    [self startCapture];
 }
 
 - (void)createViews {
@@ -78,12 +96,109 @@
     [self.view addSubview:self.baoheSlider];
 }
 
-- (void)createCamera {
+/*
+ /// 3:4
+ HD_VIDEO_RATIO_3_4,
+ /// 9:16
+ HD_VIDEO_RATIO_9_16,
+ */
+- (void)setRatio:(HDVideoAspectRatio)ratio {
+    _ratio = ratio;
+    
+    self.cropRegion = CGRectMake(0, 0, 1, 1);
+    CGFloat radio = 1;
+    if (ratio == HD_VIDEO_RATIO_3_4) {
+        self.camera.captureSessionPreset = AVCaptureSessionPreset1280x720;
+        radio = 3 / 4.f;
+        CGFloat space = 1 - (3 * 3) / (4.0 * 4); // 竖直方向应该裁剪掉的空间
+        self.cropRegion = CGRectMake(0, space / 2, 1, 1 - space);
+    } else if (ratio == HD_VIDEO_RATIO_9_16) {
+        self.camera.captureSessionPreset = AVCaptureSessionPreset1280x720;
+        radio = 9 / 16.f;
+        CGFloat space = 1 - (9 * 9) / (16.0 * 16); // 竖直方向应该裁剪掉的空间
+        self.cropRegion = CGRectMake(0, space / 2, 1, 1 - space);
+    } else if (ratio == HD_VIDEO_RATIO_1_1) {
+        self.camera.captureSessionPreset = AVCaptureSessionPreset640x480;
+        CGFloat space = (4 - 3) / 4.0; // 竖直方向应该裁剪掉的空间
+        self.cropRegion = CGRectMake(0, space / 2, 1, 1 - space);
+    } else if (ratio == HD_VIDEO_RATIO_4_3) {
+        radio = 4 / 3.f;
+        self.camera.captureSessionPreset = AVCaptureSessionPreset640x480;
+    } else if (ratio == HD_VIDEO_RATIO_16_9) {
+        radio = 16 / 9.f;
+        self.camera.captureSessionPreset = AVCaptureSessionPreset1280x720;
+    } else if (ratio == HD_VIDEO_RATIO_FULL) {
+        self.camera.captureSessionPreset = AVCaptureSessionPreset1280x720;
+        CGFloat currentRatio = kScreenHeight / kScreenWidth;
+        radio = currentRatio;
+        if (currentRatio > 16.0 / 9.0) { // 需要在水平方向裁剪
+            CGFloat resultWidth = 16.0 / currentRatio;
+            CGFloat space = (9.0 - resultWidth) / 9.0;
+            self.cropRegion = CGRectMake(space / 2, 0, 1 - space, 1);
+        } else { // 需要在竖直方向裁剪
+            CGFloat resultHeight = 9.0 * currentRatio;
+            CGFloat space = (16.0 - resultHeight) / 16.0;
+            self.cropRegion = CGRectMake(0, space / 2, 1, 1 - space);
+        }
+    }
+    self.writerSize = CGSizeMake(kScreenWidth, kScreenWidth * radio);
+    
+    NSLog(@"%@",NSStringFromCGRect(self.cropRegion));
+}
+
+/**
+ 获取缓存的路径
+
+ @return 获取到自己想要的url
+ */
+- (NSURL *)obtainUrl{
+  
+    NSString *pathStr = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"456.mp4"];
+    self.moviePath = pathStr;
+    // 判断路径是否存在
+    if ([[NSFileManager defaultManager] fileExistsAtPath:pathStr]) {
+        [[NSFileManager defaultManager] removeItemAtPath:pathStr error:nil];
+    }
+    NSURL *url = [NSURL fileURLWithPath:pathStr];
+    return url;
+}
+/**
+ 创建过滤组
+ */
+- (GPUImageFilterGroup *)obtainFilterGroup {
+    
+    GPUImageFilterGroup *group = [[GPUImageFilterGroup alloc] init];
+    // 按照顺序组成一个链
+    [self.bilaterFilter addTarget:self.exposureFilter];
+    [self.exposureFilter addTarget:self.brigtnessFilter];
+    [self.brigtnessFilter addTarget:self.saturationFilter];
+    [self.saturationFilter addTarget:self.cropFilter];
+
+    // 将滤镜添加到滤镜组中(开始和结尾)
+    group.initialFilters = @[self.bilaterFilter];
+    group.terminalFilter = self.cropFilter;
+    
+    return group;
+}
+
+
+
+#pragma mark - 相关按钮的点击事件
+/// 开始录制
+- (void)startCapture {
+    
+    if (CGRectEqualToRect(self.cropRegion, CGRectZero) ) {
+        self.ratio = HD_VIDEO_RATIO_1_1;
+    }
+    
     //初始化一些滤镜
     self.bilaterFilter = [[GPUImageBilateralFilter alloc] init];
     self.exposureFilter = [[GPUImageExposureFilter alloc] init];
     self.brigtnessFilter = [[GPUImageBrightnessFilter alloc] init];
     self.saturationFilter = [[GPUImageSaturationFilter alloc] init];
+    
+    self.cropFilter = [[GPUImageCropFilter alloc] initWithCropRegion:self.cropRegion];
+
     
     self.mopiSlider.value = self.bilaterFilter.distanceNormalizationFactor / 10.f;
     self.baoguangSlider.value = self.exposureFilter.exposure;
@@ -111,42 +226,6 @@
     // 开始录制
     [self.movieWriter startRecording];
 }
-/**
- 获取缓存的路径
-
- @return 获取到自己想要的url
- */
-- (NSURL *)obtainUrl{
-  
-    NSString *pathStr = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject] stringByAppendingPathComponent:@"456.mp4"];
-    self.moviePath = pathStr;
-    // 判断路径是否存在
-    if ([[NSFileManager defaultManager] fileExistsAtPath:pathStr]) {
-        [[NSFileManager defaultManager] removeItemAtPath:pathStr error:nil];
-    }
-    NSURL *url = [NSURL fileURLWithPath:pathStr];
-    return url;
-}
-/**
- 创建过滤组
- */
-- (GPUImageFilterGroup *)obtainFilterGroup {
-    
-    GPUImageFilterGroup *group = [[GPUImageFilterGroup alloc] init];
-    // 按照顺序组成一个链
-    [self.bilaterFilter addTarget:self.exposureFilter];
-    [self.exposureFilter addTarget:self.brigtnessFilter];
-    [self.brigtnessFilter addTarget:self.saturationFilter];
-    // 将滤镜添加到滤镜组中(开始和结尾)
-    group.initialFilters = @[self.bilaterFilter];
-    group.terminalFilter = self.saturationFilter;
-    
-    return group;
-}
-
-
-
-#pragma mark - 相关按钮的点击事件
 
 /** 结束直播相关的事件 */
 - (void)endLiveAction:(UIButton *)sender {
@@ -220,25 +299,28 @@
     
 }
 
-
+/// 设置录制的宽高 startRunning 前调用
+- (void)setAspectRatio:(HDVideoAspectRatio)videoRatio {
+    
+}
 
 #pragma mark - 懒加载
 - (GPUImageVideoCamera *)camera {
     if (!_camera) {
-        _camera = [[GPUImageVideoCamera alloc] initWithSessionPreset:AVCaptureSessionPresetMedium cameraPosition:AVCaptureDevicePositionBack];
+        _camera = [[GPUImageVideoCamera alloc] initWithSessionPreset:AVCaptureSessionPreset640x480 cameraPosition:AVCaptureDevicePositionBack];
     }
     return _camera;
 }
 - (GPUImageView *)previewLayer {
     if (!_previewLayer) {
         _previewLayer = [[GPUImageView alloc] initWithFrame:CGRectMake(0, 0, kScreenWidth, kScreenWidth)];
-        _previewLayer.fillMode = kGPUImageFillModeStretch;
+        _previewLayer.fillMode = kGPUImageFillModePreserveAspectRatio;
     }
     return _previewLayer;
 }
 - (GPUImageMovieWriter *)movieWriter {
     if (!_movieWriter) {
-        _movieWriter = [[GPUImageMovieWriter alloc] initWithMovieURL:[self obtainUrl] size:CGSizeMake(kScreenWidth, kScreenWidth)];
+        _movieWriter = [[GPUImageMovieWriter alloc] initWithMovieURL:[self obtainUrl] size:self.writerSize];
     }
     return _movieWriter;
 }
