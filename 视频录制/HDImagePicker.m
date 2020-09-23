@@ -12,6 +12,7 @@
 #import "AVCaptureMovieFileOutputController.h"
 #import "AVAssetWriterController.h"
 #import <AVFoundation/AVFoundation.h>
+#import "BeautyController.h"
 
 @interface HDImagePicker ()
 <
@@ -36,7 +37,7 @@ UIImagePickerControllerDelegate
     /// 2.AVCaptureSession + AVCaptureMovieFileOutput
     /// 3.AVCaptureSession + AVAssetWriter
 
-    self.dataArr = @[@"UIImagePickerController",@"AVCaptureSession + AVCaptureMovieFileOutput",@"AVCaptureSession + AVAssetWriter"];
+    self.dataArr = @[@"UIImagePickerController",@"AVCaptureSession + AVCaptureMovieFileOutput",@"AVCaptureSession + AVAssetWriter", @"BeautyController"];
     
     UITableView *tableView = [[UITableView alloc]initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
     tableView.delegate = self;
@@ -66,9 +67,12 @@ UIImagePickerControllerDelegate
 //    AudioServicesPlaySystemSound(1519);
 
 
-    UIImpactFeedbackGenerator *generator = [[UIImpactFeedbackGenerator alloc] initWithStyle: UIImpactFeedbackStyleLight];
-    [generator prepare];
-    [generator impactOccurred];
+    if (@available(iOS 10.0, *)) {
+        UIImpactFeedbackGenerator *generator = [[UIImpactFeedbackGenerator alloc] initWithStyle: UIImpactFeedbackStyleLight];
+        [generator prepare];
+        [generator impactOccurred];
+    }
+    
     
     switch (indexPath.row) {
         case 0:
@@ -79,6 +83,9 @@ UIImagePickerControllerDelegate
             break;
         case 2:
             [self presentViewController:AVAssetWriterController.new animated:YES completion:nil];
+            break;
+        case 3:
+            [self presentViewController:BeautyController.new animated:YES completion:nil];
             break;
         default:
             break;

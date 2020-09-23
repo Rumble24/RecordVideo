@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -17,9 +17,11 @@
 		64CFBBD12518AE620026136D /* MovieFileOutputView.m in Sources */ = {isa = PBXBuildFile; fileRef = 64CFBBD02518AE620026136D /* MovieFileOutputView.m */; };
 		64CFBBD62518C09A0026136D /* HDUploadIntroRecordView.m in Sources */ = {isa = PBXBuildFile; fileRef = 64CFBBD42518C09A0026136D /* HDUploadIntroRecordView.m */; };
 		64CFBBD72518C09A0026136D /* HDUploadRecordEncoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 64CFBBD52518C09A0026136D /* HDUploadRecordEncoder.m */; };
+		64CFBBDD251A0CBF0026136D /* BeautyController.m in Sources */ = {isa = PBXBuildFile; fileRef = 64CFBBDC251A0CBF0026136D /* BeautyController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2581137E19E5D182B1D36D29 /* Pods_____.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = "Pods_____.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
 		64CFBBAB25184D640026136D /* 视频录制.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "视频录制.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		64CFBBAE25184D640026136D /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		64CFBBAF25184D640026136D /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -40,6 +42,10 @@
 		64CFBBD32518C09A0026136D /* HDUploadIntroRecordView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HDUploadIntroRecordView.h; sourceTree = "<group>"; };
 		64CFBBD42518C09A0026136D /* HDUploadIntroRecordView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDUploadIntroRecordView.m; sourceTree = "<group>"; };
 		64CFBBD52518C09A0026136D /* HDUploadRecordEncoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HDUploadRecordEncoder.m; sourceTree = "<group>"; };
+		64CFBBDB251A0CBF0026136D /* BeautyController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BeautyController.h; sourceTree = "<group>"; };
+		64CFBBDC251A0CBF0026136D /* BeautyController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BeautyController.m; sourceTree = "<group>"; };
+		842AB98358D5C684907C8277 /* Pods-视频录制.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-视频录制.release.xcconfig"; path = "Target Support Files/Pods-视频录制/Pods-视频录制.release.xcconfig"; sourceTree = "<group>"; };
+		C6F17AB51B299910156B90CF /* Pods-视频录制.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-视频录制.debug.xcconfig"; path = "Target Support Files/Pods-视频录制/Pods-视频录制.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +64,8 @@
 			children = (
 				64CFBBAD25184D640026136D /* 视频录制 */,
 				64CFBBAC25184D640026136D /* Products */,
+				817600BA0FCC48733EC8DEFA /* Pods */,
+				B08C462F8015D192B26A3C1D /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -79,6 +87,7 @@
 				64CFBBB525184D640026136D /* HDImagePicker.m */,
 				64CFBBD82519E4850026136D /* MovieFileOutput */,
 				64CFBBD92519E4970026136D /* AVAssetWriter */,
+				64CFBBDA251A0C7B0026136D /* 美颜 */,
 				64CFBBBA25184D660026136D /* Assets.xcassets */,
 				64CFBBBC25184D660026136D /* LaunchScreen.storyboard */,
 				64CFBBBF25184D660026136D /* Info.plist */,
@@ -111,6 +120,32 @@
 			path = AVAssetWriter;
 			sourceTree = "<group>";
 		};
+		64CFBBDA251A0C7B0026136D /* 美颜 */ = {
+			isa = PBXGroup;
+			children = (
+				64CFBBDB251A0CBF0026136D /* BeautyController.h */,
+				64CFBBDC251A0CBF0026136D /* BeautyController.m */,
+			);
+			path = "美颜";
+			sourceTree = "<group>";
+		};
+		817600BA0FCC48733EC8DEFA /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				C6F17AB51B299910156B90CF /* Pods-视频录制.debug.xcconfig */,
+				842AB98358D5C684907C8277 /* Pods-视频录制.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		B08C462F8015D192B26A3C1D /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				2581137E19E5D182B1D36D29 /* Pods_____.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -118,9 +153,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 64CFBBC425184D660026136D /* Build configuration list for PBXNativeTarget "视频录制" */;
 			buildPhases = (
+				9A96608D311EFAB67DAF5482 /* [CP] Check Pods Manifest.lock */,
 				64CFBBA725184D640026136D /* Sources */,
 				64CFBBA825184D640026136D /* Frameworks */,
 				64CFBBA925184D640026136D /* Resources */,
+				026F07FE92537FCAA941D4CD /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -175,11 +212,54 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		026F07FE92537FCAA941D4CD /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-视频录制/Pods-视频录制-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-视频录制/Pods-视频录制-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-视频录制/Pods-视频录制-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		9A96608D311EFAB67DAF5482 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-视频录制-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		64CFBBA725184D640026136D /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				64CFBBDD251A0CBF0026136D /* BeautyController.m in Sources */,
 				64CFBBB625184D640026136D /* HDImagePicker.m in Sources */,
 				64CFBBB025184D640026136D /* AppDelegate.m in Sources */,
 				64CFBBD72518C09A0026136D /* HDUploadRecordEncoder.m in Sources */,
@@ -317,6 +397,7 @@
 		};
 		64CFBBC525184D660026136D /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C6F17AB51B299910156B90CF /* Pods-视频录制.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "视频录制/视频录制.entitlements";
@@ -324,6 +405,7 @@
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = RADML45TTY;
 				INFOPLIST_FILE = "视频录制/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -337,6 +419,7 @@
 		};
 		64CFBBC625184D660026136D /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 842AB98358D5C684907C8277 /* Pods-视频录制.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "视频录制/视频录制.entitlements";
@@ -344,6 +427,7 @@
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = RADML45TTY;
 				INFOPLIST_FILE = "视频录制/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
