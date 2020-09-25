@@ -2,24 +2,20 @@ PODS:
   - GPUImage (0.1.7)
   - GPUImageBeautifyFilter (1.0.0):
     - GPUImage
-  - LFLiveKit (2.6)
 
 DEPENDENCIES:
   - GPUImage
   - GPUImageBeautifyFilter
-  - LFLiveKit
 
 SPEC REPOS:
   trunk:
     - GPUImage
     - GPUImageBeautifyFilter
-    - LFLiveKit
 
 SPEC CHECKSUMS:
   GPUImage: 733a5f0fab92df9de1c37ba9df520a833ccb406d
   GPUImageBeautifyFilter: 6eb451b50c395109172ae1f9e69c4241d0126c09
-  LFLiveKit: 2219563721f8aa0f188effc3395a06e2d53b23f2
 
-PODFILE CHECKSUM: 5f148ab2756e190da90a1cafd2da86ad53711432
+PODFILE CHECKSUM: e4102a1070e529e1b933b978afc92ac1b42355aa
 
 COCOAPODS: 1.9.1

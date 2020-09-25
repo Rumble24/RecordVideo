@@ -21,10 +21,11 @@
 		64CFBBD62518C09A0026136D /* HDUploadIntroRecordView.m in Sources */ = {isa = PBXBuildFile; fileRef = 64CFBBD42518C09A0026136D /* HDUploadIntroRecordView.m */; };
 		64CFBBD72518C09A0026136D /* HDUploadRecordEncoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 64CFBBD52518C09A0026136D /* HDUploadRecordEncoder.m */; };
 		64CFBBDD251A0CBF0026136D /* BeautyController.m in Sources */ = {isa = PBXBuildFile; fileRef = 64CFBBDC251A0CBF0026136D /* BeautyController.m */; };
+		B38BCDAF332B40B5D1EA9F82 /* Pods_____.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2581137E19E5D182B1D36D29 /* Pods_____.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		2581137E19E5D182B1D36D29 /* Pods_____.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = "Pods_____.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2581137E19E5D182B1D36D29 /* Pods_____.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_____.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		64635231251C485700A4A311 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
 		64635234251DC87D00A4A311 /* LiveViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LiveViewController.h; sourceTree = "<group>"; };
 		64635235251DC87D00A4A311 /* LiveViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LiveViewController.m; sourceTree = "<group>"; };
@@ -60,6 +61,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B38BCDAF332B40B5D1EA9F82 /* Pods_____.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -427,7 +429,7 @@
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = RADML45TTY;
 				INFOPLIST_FILE = "视频录制/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -449,7 +451,7 @@
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = RADML45TTY;
 				INFOPLIST_FILE = "视频录制/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
