@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		64635232251C485700A4A311 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 64635231251C485700A4A311 /* README.md */; };
+		64635236251DC87D00A4A311 /* LiveViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 64635235251DC87D00A4A311 /* LiveViewController.m */; };
+		64635238251DC96200A4A311 /* LIVE.md in Resources */ = {isa = PBXBuildFile; fileRef = 64635237251DC96200A4A311 /* LIVE.md */; };
 		64CFBBB025184D640026136D /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 64CFBBAF25184D640026136D /* AppDelegate.m */; };
 		64CFBBB625184D640026136D /* HDImagePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 64CFBBB525184D640026136D /* HDImagePicker.m */; };
 		64CFBBBB25184D660026136D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 64CFBBBA25184D660026136D /* Assets.xcassets */; };
@@ -22,6 +25,10 @@
 
 /* Begin PBXFileReference section */
 		2581137E19E5D182B1D36D29 /* Pods_____.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = "Pods_____.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		64635231251C485700A4A311 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
+		64635234251DC87D00A4A311 /* LiveViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LiveViewController.h; sourceTree = "<group>"; };
+		64635235251DC87D00A4A311 /* LiveViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LiveViewController.m; sourceTree = "<group>"; };
+		64635237251DC96200A4A311 /* LIVE.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = LIVE.md; sourceTree = SOURCE_ROOT; };
 		64CFBBAB25184D640026136D /* 视频录制.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "视频录制.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		64CFBBAE25184D640026136D /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		64CFBBAF25184D640026136D /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -59,6 +66,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		64635233251DC85400A4A311 /* Live */ = {
+			isa = PBXGroup;
+			children = (
+				64635234251DC87D00A4A311 /* LiveViewController.h */,
+				64635235251DC87D00A4A311 /* LiveViewController.m */,
+			);
+			path = Live;
+			sourceTree = "<group>";
+		};
 		64CFBBA225184D640026136D = {
 			isa = PBXGroup;
 			children = (
@@ -81,6 +97,8 @@
 			isa = PBXGroup;
 			children = (
 				64CFBBC82518A4AD0026136D /* 视频录制.entitlements */,
+				64635231251C485700A4A311 /* README.md */,
+				64635237251DC96200A4A311 /* LIVE.md */,
 				64CFBBAE25184D640026136D /* AppDelegate.h */,
 				64CFBBAF25184D640026136D /* AppDelegate.m */,
 				64CFBBB425184D640026136D /* HDImagePicker.h */,
@@ -88,6 +106,7 @@
 				64CFBBD82519E4850026136D /* MovieFileOutput */,
 				64CFBBD92519E4970026136D /* AVAssetWriter */,
 				64CFBBDA251A0C7B0026136D /* 美颜 */,
+				64635233251DC85400A4A311 /* Live */,
 				64CFBBBA25184D660026136D /* Assets.xcassets */,
 				64CFBBBC25184D660026136D /* LaunchScreen.storyboard */,
 				64CFBBBF25184D660026136D /* Info.plist */,
@@ -205,7 +224,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				64635232251C485700A4A311 /* README.md in Resources */,
 				64CFBBBE25184D660026136D /* LaunchScreen.storyboard in Resources */,
+				64635238251DC96200A4A311 /* LIVE.md in Resources */,
 				64CFBBBB25184D660026136D /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -259,6 +280,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				64635236251DC87D00A4A311 /* LiveViewController.m in Sources */,
 				64CFBBDD251A0CBF0026136D /* BeautyController.m in Sources */,
 				64CFBBB625184D640026136D /* HDImagePicker.m in Sources */,
 				64CFBBB025184D640026136D /* AppDelegate.m in Sources */,

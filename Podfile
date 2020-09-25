@@ -4,6 +4,8 @@ platform :ios, '9.0'
 target '视频录制' do
 
   use_frameworks!
+  pod 'LFLiveKit' 
+
   pod 'GPUImage'
   pod 'GPUImageBeautifyFilter'
 

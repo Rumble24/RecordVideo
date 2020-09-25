@@ -26,8 +26,6 @@
 
 @property (assign, nonatomic) NSUInteger aspectRatio;
 
-@property(nonatomic) CGRect            viewBounds;
-
 // Initialization and teardown
 - (void)commonInit;
 
@@ -63,8 +61,6 @@
     }
     
     [self commonInit];
-    
-    self.viewBounds = self.bounds;
     
     return self;
 }
@@ -136,8 +132,6 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    
-    self.viewBounds = self.bounds;
     
     // The frame buffer needs to be trashed and re-created when the view size changes.
     if (!CGSizeEqualToSize(self.bounds.size, boundsSizeAtFrameBufferEpoch) &&
@@ -238,12 +232,12 @@
     runSynchronouslyOnVideoProcessingQueue(^{
         CGFloat heightScaling, widthScaling;
         
-        CGSize currentViewSize = self.viewBounds.size;
-                
+        CGSize currentViewSize = self.bounds.size;
+        
         //    CGFloat imageAspectRatio = inputImageSize.width / inputImageSize.height;
         //    CGFloat viewAspectRatio = currentViewSize.width / currentViewSize.height;
         
-        CGRect insetRect = AVMakeRectWithAspectRatioInsideRect(inputImageSize, self.viewBounds);
+        CGRect insetRect = AVMakeRectWithAspectRatioInsideRect(inputImageSize, self.bounds);
         
         switch(_fillMode)
         {

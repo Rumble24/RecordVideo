@@ -19,9 +19,15 @@
 
 ///< 创建摄像头
 @property (nonatomic, strong) GPUImageVideoCamera *camera;
-///< 创建展示的view
+///< 创建展示的view  视频播放器的实现
 @property (nonatomic, strong) GPUImageView *previewLayer;
 
+                                           /// GPUImageFilter  需要我们写各种shader[着色器] 处理每一个像素点
+///大致流程     输出源<GPUImageOutput>   -->   处理<GPUImageOutput 和 GPUImageInput>   -->   处理后的视频/图片<GPUImageInput>
+
+
+
+///< 采用视频链的方式第一个处理完 再处理第二个 GPU处理链
 
 ///< 创建几个滤镜。我们可以基于 GPUImageFilter 写自己的滤镜
 ///< 大量现成的内置滤镜（4大类） 1). 颜色类（亮度、色度、饱和度、对比度、曲线、白平衡...） 2). 图像类（仿射变换、裁剪、高斯模糊、毛玻璃效果...） 3). 颜色混合类（差异混合、alpha混合、遮罩混合...） 4). 效果类（像素化、素描效果、压花效果、球形玻璃效果...）

@@ -13,6 +13,7 @@
 #import "AVAssetWriterController.h"
 #import <AVFoundation/AVFoundation.h>
 #import "BeautyController.h"
+#import "LiveViewController.h"
 
 @interface HDImagePicker ()
 <
@@ -37,7 +38,7 @@ UIImagePickerControllerDelegate
     /// 2.AVCaptureSession + AVCaptureMovieFileOutput
     /// 3.AVCaptureSession + AVAssetWriter
 
-    self.dataArr = @[@"UIImagePickerController",@"AVCaptureSession + AVCaptureMovieFileOutput",@"AVCaptureSession + AVAssetWriter", @"BeautyController"];
+    self.dataArr = @[@"UIImagePickerController",@"AVCaptureSession + AVCaptureMovieFileOutput",@"AVCaptureSession + AVAssetWriter", @"BeautyController", @"LiveViewController"];
     
     UITableView *tableView = [[UITableView alloc]initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
     tableView.delegate = self;
@@ -88,6 +89,8 @@ UIImagePickerControllerDelegate
             BeautyController *beauty = [[BeautyController alloc]initWithAspectRatio:HD_VIDEO_RATIO_3_4];
             [self presentViewController:beauty animated:YES completion:nil];
         } break;
+        case 4:
+            [self presentViewController:LiveViewController.new animated:YES completion:nil];
         default:
             break;
     }
